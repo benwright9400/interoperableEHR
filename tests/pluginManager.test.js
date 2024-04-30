@@ -64,3 +64,14 @@ describe("Test test plugin route", () => {
     done();
   });
 });
+
+//webpage defined as plugin route
+test("It should return the test plugin page", function (done) {
+  request(app)
+    .get("/test/ui")
+    .then((response) => {
+      console.log(response.body);
+      expect(response.statusCode).toBe(200);
+      done();
+    });
+});

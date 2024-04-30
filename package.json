@@ -20,8 +20,12 @@
   },
   "jest": {
     "testEnvironment": "node",
+    "testPathIgnorePatterns": [
+      "/plugins/"
+    ],
     "coveragePathIgnorePatterns": [
-      "/node_modules/"
+      "/node_modules/",
+      "/plugins/"
     ]
   }
 }
