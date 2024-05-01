@@ -20,6 +20,9 @@ import {
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
+import LoginButton from "./Login";
+import { useAuth0 } from "@auth0/auth0-react";
+import LoginPage from "./Login";
 
 const user = {
   name: "Tom Cook",
@@ -29,9 +32,8 @@ const user = {
 };
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
-  { name: "Team", href: "#", current: false },
-  { name: "Projects", href: "#", current: false },
-  { name: "Calendar", href: "#", current: false },
+  { name: "Patients", href: "#", current: false },
+  { name: "Requests", href: "#", current: false },
 ];
 const userNavigation = [
   { name: "Your Profile", href: "#" },
@@ -44,6 +46,12 @@ function classNames(...classes) {
 }
 
 function App() {
+  const { logout, user, isAuthenticated, isLoading } = useAuth0();
+
+  if(!isAuthenticated) {
+    return <LoginPage />;
+  }
+
   return (
     <>
       {/*
@@ -133,6 +141,9 @@ function App() {
                                     active ? "bg-gray-100" : "",
                                     "block px-4 py-2 text-sm text-gray-700"
                                   )}
+                                  onClick={
+                                    item.name == "Sign out" ? logout : ""
+                                  }
                                 >
                                   {item.name}
                                 </a>
