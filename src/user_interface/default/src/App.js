@@ -48,7 +48,7 @@ function classNames(...classes) {
 function App() {
   const { logout, user, isAuthenticated, isLoading } = useAuth0();
 
-  if(!isAuthenticated) {
+  if (!isAuthenticated) {
     return <LoginPage />;
   }
 
@@ -116,8 +116,10 @@ function App() {
                           <span className="absolute -inset-1.5" />
                           <span className="sr-only">Open user menu</span>
                           {/* <img className="h-8 w-8 rounded-full" src={user.imageUrl} alt="" /> */}
-                          <UserCircleIcon
-                            className="h-8 w-8"
+                          <img
+                            src={user.picture}
+                            alt={user.name}
+                            className="h-8 w-8 rounded-full"
                             aria-hidden="true"
                           />
                         </Menu.Button>
@@ -199,7 +201,7 @@ function App() {
                     <div className="flex-shrink-0">
                       <img
                         className="h-10 w-10 rounded-full"
-                        src={user.imageUrl}
+                        src={user.picture}
                         alt=""
                       />
                     </div>
