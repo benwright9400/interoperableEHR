@@ -39,6 +39,7 @@ describe("Test test plugin route", () => {
     });
 
     expect(server).toBeDefined();
+    server.close();
     done();
   });
 
@@ -48,7 +49,6 @@ describe("Test test plugin route", () => {
       .then((response) => {
         expect(response.statusCode).toBe(200);
         expect(response.body.text).toEqual("this comes from the test plugin");
-        server.close();
         done();
       });
   });

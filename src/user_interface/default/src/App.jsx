@@ -32,9 +32,15 @@ function setMainAppToken(token) {
   window.mainAppToken = token;
 }
 
+const DASHBOARD = "Dashboard";
+const PATIENTS = "Patients";
+const REQUESTS = "Requests";
+
 function App() {
   const { logout, user, isAuthenticated, isLoading, getAccessTokenSilently } =
     useAuth0();
+
+  const [page, setPage] = useState(DASHBOARD);
 
   const [token, setToken] = useState("");
 
@@ -68,12 +74,12 @@ function App() {
                       <img
                         className="block h-12 w-auto lg:hidden"
                         src="../logo512.png"
-                        alt="Your Company"
+                        alt="interoperableEHR"
                       />
                       <img
                         className="hidden h-12 w-auto lg:block"
                         src="../logo512.png"
-                        alt="Your Company"
+                        alt="interoperableEHR"
                       />
                     </div>
                     <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
@@ -82,11 +88,12 @@ function App() {
                           key={item.name}
                           href={item.href}
                           className={classNames(
-                            item.current
+                            item.name === page
                               ? "border-blue-500 text-gray-900"
                               : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
                             "inline-flex items-center border-b-2 px-1 pt-1 text-sm font-medium"
                           )}
+                          onClick={() => setPage(item.name)}
                           aria-current={item.current ? "page" : undefined}
                         >
                           {item.name}
@@ -235,11 +242,12 @@ function App() {
           )}
         </Disclosure>
 
+        {/* Body content */}
         <div className="py-10">
           <header>
             <div className="mx-auto px-8">
               <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-                Dashboard
+                {page}
               </h1>
             </div>
           </header>
@@ -249,7 +257,9 @@ function App() {
                 id="body-iframe"
                 className="w-full"
                 height={(window.innerHeight * 3) / 4}
-                src="http://localhost:3000/test/ui"
+                src={
+                  page === DASHBOARD ? "http://localhost:3000/test/ui" : null
+                }
               ></iframe>
             </div>
           </main>

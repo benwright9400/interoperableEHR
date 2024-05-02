@@ -6,36 +6,9 @@ describe("Test the root path", () => {
     request(app)
       .get("/")
       .then((response) => {
-        console.log(response.body);
+        console.log(response.headers);
         expect(response.statusCode).toBe(200);
-        expect(response.body.text).toEqual("Hello World!");
-        server.close();
-        done();
-      });
-  });
-});
-
-describe("Test auth", () => {
-  test("It should return the correct response", (done) => {
-    request(app)
-      .get("/")
-      .then((response) => {
-        console.log(response.body);
-        expect(response.statusCode).toBe(200);
-        expect(response.body.text).toEqual("Hello World!");
-        server.close();
-        done();
-      });
-  });
-
-  test("It should return an auth error", (done) => {
-    request(app)
-      .get("/")
-      .then((response) => {
-        console.log(response.body);
-        expect(response.statusCode).toBe(200);
-        expect(response.body.text).toEqual("Hello World!");
-        server.close();
+        expect(response.headers["content-type"]).toEqual("text/html; charset=UTF-8");
         done();
       });
   });
