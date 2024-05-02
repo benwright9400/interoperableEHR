@@ -29,6 +29,14 @@
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
     <div id="root"></div>
+    <script>
+      const { mainAppToken } = top;
+      console.log(mainAppToken);
+      window.mainAppToken = mainAppToken;
+      console.log(top);
+      console.log(top.localStorage);
+          // result: {a: 1, b: 2, c: 3, d: undefined, e: undefined}
+  </script>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.

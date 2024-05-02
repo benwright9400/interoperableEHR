@@ -1,18 +1,4 @@
-// import "./App.css";
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <iframe src="http://localhost:3000/test/ui" title="embedded page"></iframe>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-
-import { Fragment } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import {
   Bars3Icon,
@@ -20,16 +6,11 @@ import {
   UserCircleIcon,
   XMarkIcon,
 } from "@heroicons/react/24/outline";
-import LoginButton from "./Login";
+// import LoginButton from "./Login";
 import { useAuth0 } from "@auth0/auth0-react";
 import LoginPage from "./Login";
+// import Iframe from "@nicholasadamou/react-iframe";
 
-const user = {
-  name: "Tom Cook",
-  email: "tom@example.com",
-  imageUrl:
-    "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
-};
 const navigation = [
   { name: "Dashboard", href: "#", current: true },
   { name: "Patients", href: "#", current: false },
@@ -45,8 +26,30 @@ function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
+function setMainAppToken(token) {
+  console.log("token val");
+  console.log(token);
+  window.mainAppToken = token;
+}
+
 function App() {
-  const { logout, user, isAuthenticated, isLoading } = useAuth0();
+  const { logout, user, isAuthenticated, isLoading, getAccessTokenSilently } =
+    useAuth0();
+
+  const [token, setToken] = useState("");
+
+  function setAppToken(tok) {
+    setMainAppToken(tok);
+  }
+
+  useEffect(function () {
+    if (isAuthenticated && token === "") {
+      getAccessTokenSilently().then((tokenVal) => {
+        setAppToken(tokenVal);
+        setToken(tokenVal);
+      });
+    }
+  });
 
   if (!isAuthenticated) {
     return <LoginPage />;
@@ -54,14 +57,6 @@ function App() {
 
   return (
     <>
-      {/*
-        This example requires updating your template:
-
-        ```
-        <html class="h-full">
-        <body class="h-full">
-        ```
-      */}
       <div className="min-h-full">
         <Disclosure as="nav" className="border-b border-gray-200 bg-white">
           {({ open }) => (
@@ -242,18 +237,19 @@ function App() {
 
         <div className="py-10">
           <header>
-            <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+            <div className="mx-auto px-8">
               <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
                 Dashboard
               </h1>
             </div>
           </header>
-          <main>
-            <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <main className="px-8">
+            <div className="mx-auto w-full mt-4">
               <iframe
+                id="body-iframe"
+                className="w-full"
+                height={(window.innerHeight * 3) / 4}
                 src="http://localhost:3000/test/ui"
-                title="embedded page"
-                className="w-full my-4"
               ></iframe>
             </div>
           </main>

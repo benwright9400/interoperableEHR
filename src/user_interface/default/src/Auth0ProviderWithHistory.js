@@ -8,6 +8,12 @@ const Auth0ProviderWithHistory = ({ children }) => {
       domain={domain}
       clientId={clientId}
       redirectUri={window.location.origin}
+      useRefreshTokens={true}
+      cacheLocation={'localstorage'}
+      authorizationParams={{
+        redirect_uri: window.location.origin,
+        audience: 'https://interoperable-ehr',
+      }}
     >
       {children}
     </Auth0Provider>
