@@ -1,0 +1,10 @@
+{
+    "rules": [
+        {
+            "condition": {
+                "source": "St Clements"
+            },
+            "route": "/pluginA/ui"
+        }
+    ]
+}
