@@ -10,7 +10,7 @@ class TestingPlugin extends AbstractPlugin {
     }
 
     if (name === "getPatientInfo") {
-      return (new DataAccess()).getPatient();
+      return (new DataAccess()).getPatientData().getPatient();
     }
   }
 

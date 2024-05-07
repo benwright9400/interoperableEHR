@@ -13,7 +13,7 @@ class TestingPlugin extends AbstractPluginClass_1.default {
             return "This is returned from testMethod";
         }
         if (name === "getPatientInfo") {
-            return (new DataAccess_1.default()).getPatient();
+            return (new DataAccess_1.default()).getPatientData().getPatient();
         }
     }
     applyRoutes(app) {
