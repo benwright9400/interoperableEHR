@@ -65,6 +65,22 @@ describe("Test test plugin route", () => {
   });
 });
 
+//test method with api call
+describe("Test api call from plugin", () => {
+  test("It should return patient information", function (done) {
+
+    pluginManager.loadPlugin("TestingPlugin").executeMethod("getPatientInfo").then((patients) => {
+      console.log(patients);
+
+      expect(
+        patients.id
+      ).toBe('6839219');
+
+      done();
+    });
+  });
+});
+
 //webpage defined as plugin route
 test("It should return the test plugin page", function (done) {
   request(app)

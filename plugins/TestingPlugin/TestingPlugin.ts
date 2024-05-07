@@ -1,11 +1,16 @@
 import AbstractPlugin from "../pluginManager/AbstractPluginClass";
 import path from "path";
 import express from "express";
+import DataAccess from "./data/DataAccess";
 
 class TestingPlugin extends AbstractPlugin {
   executeMethod(name: any, props: any) {
     if (name === "testMethod") {
       return "This is returned from testMethod";
+    }
+
+    if (name === "getPatientInfo") {
+      return (new DataAccess()).getPatient();
     }
   }
 

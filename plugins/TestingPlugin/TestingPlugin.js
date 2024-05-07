@@ -6,10 +6,14 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const AbstractPluginClass_1 = __importDefault(require("../pluginManager/AbstractPluginClass"));
 const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
+const DataAccess_1 = __importDefault(require("./data/DataAccess"));
 class TestingPlugin extends AbstractPluginClass_1.default {
     executeMethod(name, props) {
         if (name === "testMethod") {
             return "This is returned from testMethod";
+        }
+        if (name === "getPatientInfo") {
+            return (new DataAccess_1.default()).getPatient();
         }
     }
     applyRoutes(app) {
