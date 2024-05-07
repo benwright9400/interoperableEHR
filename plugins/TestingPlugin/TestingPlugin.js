@@ -17,6 +17,7 @@ class TestingPlugin extends AbstractPluginClass_1.default {
         app.get("/test", (req, res) => {
             res.send({ text: "this comes from the test plugin" });
         });
+        //setting up react page
         app.use(express_1.default.static(path_1.default.join(__dirname, "ui", "testing-plugin-ui", "build")));
         app.get("/test/ui/", (req, res) => {
             res.sendFile(path_1.default.join(__dirname, "ui", "testing-plugin-ui", "build", "index.html"));

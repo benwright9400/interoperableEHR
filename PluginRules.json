@@ -1,8 +1,23 @@
 {
     "rules": [
         {
+            "subject": "patient-sidebar",
             "condition": {
                 "source": "St Clements"
+            },
+            "route": "/pluginA/ui"
+        },
+        {
+            "subject": "test-subject",
+            "condition": {
+                "source": "St Clements"
+            },
+            "route": "/pluginA/ui"
+        },
+        {
+            "subject": "test-subject",
+            "condition": {
+                "type": "patient"
             },
             "route": "/pluginA/ui"
         }
