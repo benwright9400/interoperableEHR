@@ -31,7 +31,8 @@ app.use(
 );
 
 app.get("/", (req, res) => {
-  res.sendFile("index.html");
+  res.sendFile(path.join(__dirname, "src", "user_interface", "default", "build", "index.html")
+  );
 });
 
 //auth checks are only used in a production environment

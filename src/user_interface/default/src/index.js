@@ -4,11 +4,12 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import Auth0ProviderWithHistory from "./Auth0ProviderWithHistory";
+import PatientSidebar from "./components/PatientSidebar";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <Auth0ProviderWithHistory>
-    <App />
+    <PatientSidebar />
   </Auth0ProviderWithHistory>
 );
 
