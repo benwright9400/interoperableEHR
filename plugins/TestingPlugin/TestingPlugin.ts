@@ -2,6 +2,7 @@ import AbstractPlugin from "../pluginManager/AbstractPluginClass";
 import path from "path";
 import express from "express";
 import DataAccess from "./data/DataAccess";
+import PatientFormatter from "./logic/PatientFormatter";
 
 class TestingPlugin extends AbstractPlugin {
   executeMethod(name: any, props: any) {
@@ -11,6 +12,10 @@ class TestingPlugin extends AbstractPlugin {
 
     if (name === "getPatientInfo") {
       return (new DataAccess()).getPatientData().getPatient();
+    }
+
+    if(name === "getPatientNameString") {
+      return (new PatientFormatter()).getPatientName();
     }
   }
 

@@ -7,6 +7,7 @@ const AbstractPluginClass_1 = __importDefault(require("../pluginManager/Abstract
 const path_1 = __importDefault(require("path"));
 const express_1 = __importDefault(require("express"));
 const DataAccess_1 = __importDefault(require("./data/DataAccess"));
+const PatientFormatter_1 = __importDefault(require("./logic/PatientFormatter"));
 class TestingPlugin extends AbstractPluginClass_1.default {
     executeMethod(name, props) {
         if (name === "testMethod") {
@@ -14,6 +15,9 @@ class TestingPlugin extends AbstractPluginClass_1.default {
         }
         if (name === "getPatientInfo") {
             return (new DataAccess_1.default()).getPatientData().getPatient();
+        }
+        if (name === "getPatientNameString") {
+            return (new PatientFormatter_1.default()).getPatientName();
         }
     }
     applyRoutes(app) {
