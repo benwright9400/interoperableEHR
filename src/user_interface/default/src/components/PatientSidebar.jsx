@@ -31,6 +31,7 @@ import {
 import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { useAuth0 } from '@auth0/auth0-react'
 import LoginPage from '../Login'
+import DynamicContentDisplay from './DynamicContentDisplay'
 
 const navigation = [
     { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
@@ -419,14 +420,15 @@ export default function PatientSidebar() {
 
                     <main className="p-4 flex flex-grow flex-1">
                         <div className="w-full h-full">
-                            <iframe
+                            {/* <iframe
                                 id="body-iframe"
                                 className="w-full"
                                 height={window.outerHeight - 200}
                                 src={
                                     "http://localhost:3000/test/ui"
                                 }
-                            ></iframe>
+                            ></iframe> */}
+                            <DynamicContentDisplay input={{ name: "Ben", age: 21, occupation: "student" }} />
                         </div>
                     </main>
                 </div >
