@@ -428,7 +428,7 @@ export default function PatientSidebar() {
                                     "http://localhost:3000/test/ui"
                                 }
                             ></iframe> */}
-                            <DynamicContentDisplay input={{ name: "Ben", age: 21, occupation: "student" }} />
+                            <DynamicContentDisplay input={{ name: "Ben", age: 21, occupation: "student", additionalInfo: {text: "another object", numbers: {one: 1, two: 2, three: 3, four: 4, embedding: {text: "this is another embedding"}}} }} />
                         </div>
                     </main>
                 </div >
