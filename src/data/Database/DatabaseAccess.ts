@@ -1,6 +1,7 @@
 import { model, connect } from 'mongoose';
 import { IPatient, PatientSchema } from './Schemas/UserSchema';
 import * as dotenv from "dotenv";
+import { DocumentSchema } from './Schemas/DocumentSchema';
 dotenv.config({ path: __dirname+'/../../../.env' });
 
 class DatabaseAccess {
@@ -51,11 +52,29 @@ class DatabaseAccess {
         return await Patient.findOneAndDelete(id).exec();
     }
 
-    getPatientDocuments() {
+    async getPatientDocuments(id: String) {
+        connect(process.env.MONGO_DB_URI);
+        const Document = model('Document', DocumentSchema);
 
+        return await Document.find({patientId: id}).exec();
     }
 
-    createPatientDocument() {
+    async createPatientDocument(patientId: String, documentDate: String, documentType: String, documentContent) {
+        connect(process.env.MONGO_DB_URI);
+        const Document = model('Document', DocumentSchema);
+
+        let newDocument = new Document({
+            patientId: patientId,
+            documentDate: documentDate,
+            documentType: documentType,
+            documentContent: documentContent
+        });
+
+        let saveResult = await newDocument.save();
+
+        console.log(saveResult);
+        
+        return saveResult;
 
     }
 

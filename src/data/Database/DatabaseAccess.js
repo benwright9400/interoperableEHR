@@ -35,6 +35,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const mongoose_1 = require("mongoose");
 const UserSchema_1 = require("./Schemas/UserSchema");
 const dotenv = __importStar(require("dotenv"));
+const DocumentSchema_1 = require("./Schemas/DocumentSchema");
 dotenv.config({ path: __dirname + '/../../../.env' });
 class DatabaseAccess {
     constructor() {
@@ -73,9 +74,27 @@ class DatabaseAccess {
             return yield Patient.findOneAndDelete(id).exec();
         });
     }
-    getPatientDocuments() {
+    getPatientDocuments(id) {
+        return __awaiter(this, void 0, void 0, function* () {
+            (0, mongoose_1.connect)(process.env.MONGO_DB_URI);
+            const Document = (0, mongoose_1.model)('Document', DocumentSchema_1.DocumentSchema);
+            return yield Document.find({ patientId: id }).exec();
+        });
     }
-    createPatientDocument() {
+    createPatientDocument(patientId, documentDate, documentType, documentContent) {
+        return __awaiter(this, void 0, void 0, function* () {
+            (0, mongoose_1.connect)(process.env.MONGO_DB_URI);
+            const Document = (0, mongoose_1.model)('Document', DocumentSchema_1.DocumentSchema);
+            let newDocument = new Document({
+                patientId: patientId,
+                documentDate: documentDate,
+                documentType: documentType,
+                documentContent: documentContent
+            });
+            let saveResult = yield newDocument.save();
+            console.log(saveResult);
+            return saveResult;
+        });
     }
 }
 exports.default = DatabaseAccess;

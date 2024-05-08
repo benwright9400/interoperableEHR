@@ -1,4 +1,4 @@
-const {default: DatabaseAccess} = require('../src/data/Database/DatabaseAccess');
+const { default: DatabaseAccess } = require('../src/data/Database/DatabaseAccess');
 
 describe("Test Patient creation and retrieval", () => {
 
@@ -15,6 +15,36 @@ describe("Test Patient creation and retrieval", () => {
             expect(
                 result.fullName
             ).toBe("Alexander Boris Charles");
+
+            done();
+        });
+    });
+
+    test("It should create a new document", function (done) {
+        databaseAccess.createPatientDocument(patient._id, (new Date()).toISOString(), "NOTE", { content: "This is a note for this patient" }).then((result) => {
+
+            console.log(result);
+
+            expect(
+                result.patientId
+            ).toBe(patient._id.toString());
+
+            expect(
+                result.documentType
+            ).toBe("NOTE");
+
+            done();
+        });
+    });
+
+    test("It should get all documents", function (done) {
+        databaseAccess.getPatientDocuments(patient._id).then((results) => {
+
+            console.log(results);
+
+            expect(
+                results.length
+            ).toBeGreaterThan(0);
 
             done();
         });
