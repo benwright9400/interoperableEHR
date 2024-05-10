@@ -34,6 +34,7 @@ import LoginPage from '../Login'
 import DynamicContentDisplay from './DynamicContentDisplay'
 import ServerURL from '../util/ServerURL'
 import PageRendering from '../util/PageRendering'
+import DefaultContentLoader from '../util/DefaultContentLoader'
 
 const patients = [
     {
@@ -421,6 +422,8 @@ export default function PatientSidebar() {
     const [page, setPage] = useState(TREATMENT_HISTORY);
     const [defaultContent, setDefaultContent] = useState(true);
 
+    const [pageUrl, setPageUrl] = useState("DEFAULT");
+
     const [selectedPatient, setSelectedPatient] = useState({
         name: 'Ben Wright',
         address: '2 Bentley Copse',
@@ -437,28 +440,22 @@ export default function PatientSidebar() {
                 setAppToken(tokenVal);
                 setToken(tokenVal);
             });
+
+            PageRendering.shouldRenderDefault('sidebar', { source: "Example HL7 Integration", type: "patientInfo" }).then((res) => {
+                if (res.route === "DEFAULT") {
+                    setPageUrl(res.route);
+                } else {
+                    setPageUrl("http://127.0.0.1:3055" + res.route);
+                }
+            });
         }
     });
 
     function getPageContent() {
         //page refers to extension point
 
-        //make API call
-        // fetch(ServerURL.getURL() + "/render/rules", {
-        //     method: "POST",
-        //     body: {
-        //         subject: page,
-        //     }
-        // }).then((res) => res.json()).then((res) => {
-        //     console.log(res);
-
-        //     //evaluate and handle answer
-        //     setDefaultContent(res.body.route === "DEFAULT" ? true : false)
-
-        // });
-
-        if (defaultContent) {
-            return <h1>Page for {page}</h1>
+        if (pageUrl === "DEFAULT") {
+            return DefaultContentLoader.getPage(page);
         }
 
         return <iframe
@@ -466,7 +463,7 @@ export default function PatientSidebar() {
             className="w-full"
             height={window.outerHeight - 200}
             src={
-                "http://localhost:3000/test/ui"
+                pageUrl
             }
         ></iframe>;
     }
@@ -607,15 +604,6 @@ export default function PatientSidebar() {
 
                     <main className="p-4 flex flex-grow flex-1">
                         <div className="w-full h-full">
-                            {/* <iframe
-                                id="body-iframe"
-                                className="w-full"
-                                height={window.outerHeight - 200}
-                                src={
-                                    "http://localhost:3000/test/ui"
-                                }
-                            ></iframe> */}
-                            {/* <DynamicContentDisplay input={{ name: "Ben", age: 21, occupation: "student", additionalInfo: { text: "another object", numbers: { one: 1, two: 2, three: 3, four: 4, embedding: { text: "this is another embedding" } } } }} /> */}
                             {getPageContent()}
                         </div>
                     </main>
