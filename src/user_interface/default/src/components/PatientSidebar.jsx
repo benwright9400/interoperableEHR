@@ -67,6 +67,62 @@ function MobileSidebar(props) {
 
     const [searchQuery, setSearchQuery] = useState("");
 
+    const [patients, setPatients] = useState([]);
+    const [patientInfo, setPatientInfo] = useState([]);
+
+    const [pageUrl, setPageUrl] = useState("DEFAULT");
+
+    useEffect(() => {
+        getPatientList();
+
+        if (patientInfo.length > 0) {
+            PageRendering.shouldRenderDefault('sidebar', { source: "Example HL7 Integration", type: "patientInfo" }).then((res) => {
+                if (res.route === "DEFAULT") {
+                    setPageUrl(res.route);
+                } else {
+                    setPageUrl("http://127.0.0.1:3055" + res.route);
+                }
+            })
+        }
+
+    }, [patientInfo, props.patient]);
+
+    async function getPatientList() {
+
+        try {
+            let results = await fetch("http://127.0.0.1:3055/api/patients", {
+                method: "GET"
+            });
+            console.log(results);
+
+            setPatients(await results.json())
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    async function getPatientDocument(enteredId) {
+
+        try {
+            let results = await fetch("http://127.0.0.1:3055/api/document", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: enteredId
+                })
+            });
+            console.log(results);
+
+            setPatientInfo(await results.json());
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
     return <Transition.Root show={props.sidebarOpen} as={Fragment}>
         <Dialog className="relative z-50 lg:hidden" onClose={props.setSidebarOpen}>
             <Transition.Child
@@ -111,7 +167,7 @@ function MobileSidebar(props) {
                         {/* Sidebar component, swap this element with another sidebar if you like */}
                         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
                             {!searchOpen ? <div className="flex flex-row h-16 shrink-0 items-center border-b border-gray-900/10">
-                                <p>{props.selectedPatient.name}</p>
+                                <p>{props.selectedPatient.fullName}</p>
                                 <UsersIcon className='ml-auto text-gray-400 hover:text-gray-500 hover:cursor-pointer h-6 w-6 shrink-0' onClick={() => setSearchOpen(!searchOpen)}>
                                     Patient
                                 </UsersIcon>
@@ -140,11 +196,12 @@ function MobileSidebar(props) {
                                     <div className="border-t border-gray-100">
                                         <dl className="divide-y divide-gray-100">
                                             {
-                                                patients.filter((patient) => patient.name.match(searchQuery + "/*")).map((patient) => {
-                                                    return <div onClick={() => { props.setSelectedPatient(patient); setSearchOpen(false); }} className="px-4 py-4 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
-                                                        <dt className="text-sm font-medium leading-6 text-gray-900">{patient.name}</dt>
-                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{patient.dateOfBirth}</dd>
-                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{patient.address}</dd>
+                                                patients.filter((patient) => patient.fullName.match(searchQuery + "/*")).map((patient) => {
+                                                    return <div onClick={() => { props.setSelectedPatient(patient); setSearchOpen(false); getPatientDocument(patient._id) }} className="px-4 py-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
+                                                        <dt className="text-sm leading-6 text-gray-900 col-span-2 mb-2">name: {patient.fullName}</dt>
+                                                        <hr></hr>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-2">DOB: {patient.dateOfBirth}</dd>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">address: {patient.address}</dd>
                                                     </div>;
                                                 })
                                             }
@@ -154,19 +211,20 @@ function MobileSidebar(props) {
                                     <div className="px-4 sm:px-0">
                                         <h3 className="text-base font-semibold leading-7 text-gray-900">Patient information</h3>
                                     </div>
-                                    <div className="border-t border-gray-100">
-                                        <dl className="divide-y divide-gray-100">
-                                            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                                <dt className="text-sm font-medium leading-6 text-gray-900">Current conditions</dt>
-                                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Cancer<br></br>Headache<br></br>Eczema</dd>
-                                            </div>
-                                            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                                <dt className="text-sm font-medium leading-6 text-gray-900">Medications</dt>
-                                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Med a - 10mg<br></br>Med b - 5mg</dd>
-                                            </div>
-                                        </dl>
+                                    <div className="divide-y divide-gray-100 max-h-screen overflow-xy-scroll">
+                                        {
+                                            pageUrl === "DEFAULT" ? <DynamicContentDisplay input={(patientInfo.length > 0 && (Object.keys(patientInfo[0])).indexOf("documentContent") != -1) ? patientInfo[0].documentContent : {}} />
+                                                : <iframe
+                                                    id="body-iframe"
+                                                    className="w-full"
+                                                    height={window.innerHeight - 200}
+                                                    src={
+                                                        pageUrl
+                                                    }
+                                                ></iframe>
+                                        }
                                     </div>
-                                    <li className="mt-auto">
+                                    {/* <li className="mt-auto">
                                         <div
                                             className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 border-t"
                                         >
@@ -183,7 +241,7 @@ function MobileSidebar(props) {
                                                 aria-hidden="true"
                                             />
                                         </div>
-                                    </li>
+                                    </li> */}
                                 </ul>}
                             </nav>
                         </div>
@@ -296,16 +354,6 @@ function DesktopSidebar(props) {
                                     </div>;
                                 })
                             }
-                            {/* <div className="px-4 py-4 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
-                                <dt className="text-sm font-medium leading-6 text-gray-900">James Gray</dt>
-                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">21/04/2002</dd>
-                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">10 Downing street</dd>
-                            </div>
-                            <div className="px-4 py-4 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
-                                <dt className="text-sm font-medium leading-6 text-gray-900">Charles Gray</dt>
-                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">21/04/1997</dd>
-                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">11 Oxford street</dd>
-                            </div> */}
                         </dl>
                     </div>
                 </ul> : <ul role="list" className="flex flex-1 flex-col gap-y-7 relative">
@@ -313,26 +361,18 @@ function DesktopSidebar(props) {
                         <h3 className="text-base font-semibold leading-7 text-gray-900">Patient information</h3>
                     </div>
                     <div className="border-none border-gray-100">
-                        <dl className="divide-y divide-gray-100 max-h-screen overflow-xy-scroll mb-40">
+                        <dl className="divide-y divide-gray-100 max-h-screen overflow-xy-scroll">
                             {
                                 pageUrl === "DEFAULT" ? <DynamicContentDisplay input={(patientInfo.length > 0 && (Object.keys(patientInfo[0])).indexOf("documentContent") != -1) ? patientInfo[0].documentContent : {}} />
                                     : <iframe
                                         id="body-iframe"
                                         className="w-full"
-                                        height={window.outerHeight - 200}
+                                        height={window.innerHeight - 200}
                                         src={
                                             pageUrl
                                         }
                                     ></iframe>
                             }
-                            {/* <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm font-medium leading-6 text-gray-900">Current conditions</dt>
-                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Cancer<br></br>Headache<br></br>Eczema</dd>
-                            </div>
-                            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
-                                <dt className="text-sm font-medium leading-6 text-gray-900">Medications</dt>
-                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Med a - 10mg<br></br>Med b - 5mg</dd>
-                            </div> */}
                         </dl>
                     </div>
                     {/* <li className="fixed bottom-0 -left-0 w-72 bg-white">

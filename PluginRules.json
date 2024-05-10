@@ -27,7 +27,7 @@
                 "source": "Example HL7 Integration",
                 "type": "patientInfo"
             },
-            "route": "/test/ui"
+            "route": "DEFAULT"
         }
     ]
 }
