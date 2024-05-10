@@ -59,7 +59,7 @@ describe("Test Patient creation and retrieval", () => {
                 result._id.toString()
             ).toBe(patient._id.toString());
 
-            databaseAccess.deletePatient(patient._id);
+            // databaseAccess.deletePatient(patient._id);
             done();
         });
     });

@@ -20,6 +20,14 @@
                 "type": "patient"
             },
             "route": "/pluginA/ui"
+        },
+        {
+            "subject": "sidebar",
+            "condition": {
+                "source": "Example HL7 Integration",
+                "type": "patientInfo"
+            },
+            "route": "/test/ui"
         }
     ]
 }

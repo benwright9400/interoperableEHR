@@ -32,20 +32,27 @@ import { ChevronDownIcon, MagnifyingGlassIcon } from '@heroicons/react/20/solid'
 import { useAuth0 } from '@auth0/auth0-react'
 import LoginPage from '../Login'
 import DynamicContentDisplay from './DynamicContentDisplay'
+import ServerURL from '../util/ServerURL'
+import PageRendering from '../util/PageRendering'
 
-const navigation = [
-    { name: 'Dashboard', href: '#', icon: HomeIcon, current: true },
-    { name: 'Team', href: '#', icon: UsersIcon, current: false },
-    { name: 'Projects', href: '#', icon: FolderIcon, current: false },
-    { name: 'Calendar', href: '#', icon: CalendarIcon, current: false },
-    { name: 'Documents', href: '#', icon: DocumentDuplicateIcon, current: false },
-    { name: 'Reports', href: '#', icon: ChartPieIcon, current: false },
-]
-const teams = [
-    { id: 1, name: 'Heroicons', href: '#', initial: 'H', current: false },
-    { id: 2, name: 'Tailwind Labs', href: '#', initial: 'T', current: false },
-    { id: 3, name: 'Workcation', href: '#', initial: 'W', current: false },
-]
+const patients = [
+    {
+        name: 'Ben Wright',
+        address: '2 Bentley Copse',
+        dateOfBirth: '21/05/2003'
+    },
+    {
+        name: 'Charles Gray',
+        address: '12 Cavendish Copse',
+        dateOfBirth: '21/05/1998'
+    },
+    {
+        name: 'Ben Jones',
+        address: '2 Tree Lane',
+        dateOfBirth: '21/05/1983'
+    }
+];
+
 const userNavigation = [
     { name: 'Your profile', href: '#' },
     { name: 'Sign out', href: '#' },
@@ -57,6 +64,8 @@ function classNames(...classes) {
 
 function MobileSidebar(props) {
     const [searchOpen, setSearchOpen] = useState(false);
+
+    const [searchQuery, setSearchQuery] = useState("");
 
     return <Transition.Root show={props.sidebarOpen} as={Fragment}>
         <Dialog className="relative z-50 lg:hidden" onClose={props.setSidebarOpen}>
@@ -102,7 +111,7 @@ function MobileSidebar(props) {
                         {/* Sidebar component, swap this element with another sidebar if you like */}
                         <div className="flex grow flex-col gap-y-5 overflow-y-auto bg-white px-6 pb-2">
                             {!searchOpen ? <div className="flex flex-row h-16 shrink-0 items-center border-b border-gray-900/10">
-                                <p>Patient name</p>
+                                <p>{props.selectedPatient.name}</p>
                                 <UsersIcon className='ml-auto text-gray-400 hover:text-gray-500 hover:cursor-pointer h-6 w-6 shrink-0' onClick={() => setSearchOpen(!searchOpen)}>
                                     Patient
                                 </UsersIcon>
@@ -116,6 +125,7 @@ function MobileSidebar(props) {
                                     className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                                     placeholder="Search"
                                     type="search"
+                                    onChange={(e) => setSearchQuery(e.target.value)}
                                 />
                                 <XMarkIcon className='absolute right-2 text-gray-400 hover:text-gray-500 hover:cursor-pointer h-6 w-6 shrink-0' onClick={() => setSearchOpen(!searchOpen)}>
                                     Patient
@@ -124,21 +134,20 @@ function MobileSidebar(props) {
 
                             <nav className="flex flex-1 flex-col">
                                 {searchOpen ? <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                                    <div className="px-4 sm:px-0">
+                                    {/* <div className="px-4 sm:px-0">
                                         <h3 className="text-base font-semibold leading-7 text-gray-900">Patient information</h3>
-                                    </div>
+                                    </div> */}
                                     <div className="border-t border-gray-100">
                                         <dl className="divide-y divide-gray-100">
-                                            <div className="px-4 py-4 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
-                                                <dt className="text-sm font-medium leading-6 text-gray-900">James Gray</dt>
-                                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">21/04/2002</dd>
-                                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">10 Downing street</dd>
-                                            </div>
-                                            <div className="px-4 py-4 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
-                                                <dt className="text-sm font-medium leading-6 text-gray-900">Charles Gray</dt>
-                                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">21/04/1997</dd>
-                                                <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">11 Oxford street</dd>
-                                            </div>
+                                            {
+                                                patients.filter((patient) => patient.name.match(searchQuery + "/*")).map((patient) => {
+                                                    return <div onClick={() => { props.setSelectedPatient(patient); setSearchOpen(false); }} className="px-4 py-4 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
+                                                        <dt className="text-sm font-medium leading-6 text-gray-900">{patient.name}</dt>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{patient.dateOfBirth}</dd>
+                                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">{patient.address}</dd>
+                                                    </div>;
+                                                })
+                                            }
                                         </dl>
                                     </div>
                                 </ul> : <ul role="list" className="flex flex-1 flex-col gap-y-7">
@@ -185,14 +194,72 @@ function MobileSidebar(props) {
     </Transition.Root>;
 }
 
-function DesktopSidebar() {
+function DesktopSidebar(props) {
     const [searchOpen, setSearchOpen] = useState(false);
+
+    const [searchQuery, setSearchQuery] = useState("");
+
+    const [patients, setPatients] = useState([]);
+    const [patientInfo, setPatientInfo] = useState([]);
+
+    const [pageUrl, setPageUrl] = useState("DEFAULT");
+
+    useEffect(() => {
+        getPatientList();
+
+        if (patientInfo.length > 0) {
+            PageRendering.shouldRenderDefault('sidebar', { source: "Example HL7 Integration", type: "patientInfo" }).then((res) => {
+                if (res.route === "DEFAULT") {
+                    setPageUrl(res.route);
+                } else {
+                    setPageUrl("http://127.0.0.1:3055" + res.route);
+                }
+            })
+        }
+
+    }, [patientInfo, props.patient]);
+
+    async function getPatientList() {
+
+        try {
+            let results = await fetch("http://127.0.0.1:3055/api/patients", {
+                method: "GET"
+            });
+            console.log(results);
+
+            setPatients(await results.json())
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
+
+    async function getPatientDocument(enteredId) {
+
+        try {
+            let results = await fetch("http://127.0.0.1:3055/api/document", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    id: enteredId
+                })
+            });
+            console.log(results);
+
+            setPatientInfo(await results.json());
+        } catch (error) {
+            console.log(error);
+        }
+
+    }
 
     return <div className="hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-72 lg:flex-col">
         {/* Sidebar component, swap this element with another sidebar if you like */}
         <div className="flex grow flex-col gap-y-5 overflow-y-auto border-r border-gray-200 bg-white px-6 pb-2">
             {!searchOpen ? <div className="flex flex-row h-16 shrink-0 items-center border-b border-gray-900/10">
-                <p>Patient name</p>
+                <p>{props.selectedPatient.fullName}</p>
                 <UsersIcon className='ml-auto text-gray-400 hover:text-gray-500 hover:cursor-pointer h-6 w-6 shrink-0' onClick={() => setSearchOpen(!searchOpen)}>
                     Patient
                 </UsersIcon>
@@ -206,19 +273,30 @@ function DesktopSidebar() {
                     className="block w-full rounded-md border-0 bg-white py-1.5 pl-10 pr-3 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6"
                     placeholder="Search"
                     type="search"
+                    onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <XMarkIcon className='absolute right-2 text-gray-400 hover:text-gray-500 hover:cursor-pointer h-6 w-6 shrink-0' onClick={() => setSearchOpen(!searchOpen)}>
                     Patient
                 </XMarkIcon>
             </div>}
             <nav className="flex flex-1 flex-col">
-                {searchOpen ? <ul role="list" className="flex flex-1 flex-col gap-y-7">
-                    <div className="px-4 sm:px-0">
+                {searchOpen ? <ul role="list" className="flex flex-col gap-y-7">
+                    {/* <div className="px-4 sm:px-0">
                         <h3 className="text-base font-semibold leading-7 text-gray-900">Patient information</h3>
-                    </div>
+                    </div> */}
                     <div className="border-t border-gray-100">
-                        <dl className="divide-y divide-gray-100">
-                            <div className="px-4 py-4 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
+                        <dl className="divide-y divide-gray-100 overflox-x-auto">
+                            {
+                                patients.filter((patient) => patient.fullName.match(searchQuery + "/*")).map((patient) => {
+                                    return <div onClick={() => { props.setSelectedPatient(patient); setSearchOpen(false); getPatientDocument(patient._id) }} className="px-4 py-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
+                                        <dt className="text-sm leading-6 text-gray-900 col-span-2 mb-2">name: {patient.fullName}</dt>
+                                        <hr></hr>
+                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-2">DOB: {patient.dateOfBirth}</dd>
+                                        <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">address: {patient.address}</dd>
+                                    </div>;
+                                })
+                            }
+                            {/* <div className="px-4 py-4 sm:grid sm:grid-cols-5 sm:gap-4 sm:px-0 hover:cursor-pointer hover:bg-gray-200">
                                 <dt className="text-sm font-medium leading-6 text-gray-900">James Gray</dt>
                                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">21/04/2002</dd>
                                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">10 Downing street</dd>
@@ -227,28 +305,39 @@ function DesktopSidebar() {
                                 <dt className="text-sm font-medium leading-6 text-gray-900">Charles Gray</dt>
                                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">21/04/1997</dd>
                                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">11 Oxford street</dd>
-                            </div>
+                            </div> */}
                         </dl>
                     </div>
-                </ul> : <ul role="list" className="flex flex-1 flex-col gap-y-7">
+                </ul> : <ul role="list" className="flex flex-1 flex-col gap-y-7 relative">
                     <div className="px-4 sm:px-0">
                         <h3 className="text-base font-semibold leading-7 text-gray-900">Patient information</h3>
                     </div>
-                    <div className="border-t border-gray-100">
-                        <dl className="divide-y divide-gray-100">
-                            <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
+                    <div className="border-none border-gray-100">
+                        <dl className="divide-y divide-gray-100 max-h-screen overflow-xy-scroll mb-40">
+                            {
+                                pageUrl === "DEFAULT" ? <DynamicContentDisplay input={(patientInfo.length > 0 && (Object.keys(patientInfo[0])).indexOf("documentContent") != -1) ? patientInfo[0].documentContent : {}} />
+                                    : <iframe
+                                        id="body-iframe"
+                                        className="w-full"
+                                        height={window.outerHeight - 200}
+                                        src={
+                                            pageUrl
+                                        }
+                                    ></iframe>
+                            }
+                            {/* <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                 <dt className="text-sm font-medium leading-6 text-gray-900">Current conditions</dt>
                                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Cancer<br></br>Headache<br></br>Eczema</dd>
                             </div>
                             <div className="px-4 py-4 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-0">
                                 <dt className="text-sm font-medium leading-6 text-gray-900">Medications</dt>
                                 <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0">Med a - 10mg<br></br>Med b - 5mg</dd>
-                            </div>
+                            </div> */}
                         </dl>
                     </div>
-                    <li className="mt-auto">
+                    {/* <li className="fixed bottom-0 -left-0 w-72 bg-white">
                         <div
-                            className="group -mx-2 flex gap-x-3 rounded-md p-2 text-sm font-semibold leading-6 text-gray-700 border-t"
+                            className="group flex gap-x-3 py-2 px-2 rounded-md text-sm font-semibold leading-6 text-gray-700 border-t"
                         >
                             <UserIcon
                                 className="h-6 w-6 shrink-0 text-gray-400 cursor-pointer hover:text-indigo-600"
@@ -263,7 +352,7 @@ function DesktopSidebar() {
                                 aria-hidden="true"
                             />
                         </div>
-                    </li>
+                    </li> */}
                 </ul>}
             </nav>
         </div>
@@ -276,11 +365,27 @@ function setMainAppToken(token) {
     window.mainAppToken = token;
 }
 
+const CARE_PLAN = "CARE_PLAN";
+const TREATMENT_HISTORY = "TREATMENT_HISTORY";
+const RESULTS = "RESULTS";
+const NOTES = "NOTES";
+const REQUESTS = "REQUESTS";
+
+
 export default function PatientSidebar() {
     const { logout, user, isAuthenticated, isLoading, getAccessTokenSilently } =
         useAuth0();
     const [sidebarOpen, setSidebarOpen] = useState(false)
     const [token, setToken] = useState("")
+
+    const [page, setPage] = useState(TREATMENT_HISTORY);
+    const [defaultContent, setDefaultContent] = useState(true);
+
+    const [selectedPatient, setSelectedPatient] = useState({
+        name: 'Ben Wright',
+        address: '2 Bentley Copse',
+        dateOfBirth: '21/05/2003'
+    });
 
     function setAppToken(tok) {
         setMainAppToken(tok);
@@ -295,6 +400,45 @@ export default function PatientSidebar() {
         }
     });
 
+    function getPageContent() {
+        //page refers to extension point
+
+        //make API call
+        // fetch(ServerURL.getURL() + "/render/rules", {
+        //     method: "POST",
+        //     body: {
+        //         subject: page,
+        //     }
+        // }).then((res) => res.json()).then((res) => {
+        //     console.log(res);
+
+        //     //evaluate and handle answer
+        //     setDefaultContent(res.body.route === "DEFAULT" ? true : false)
+
+        // });
+
+        if (defaultContent) {
+            return <h1>Page for {page}</h1>
+        }
+
+        return <iframe
+            id="body-iframe"
+            className="w-full"
+            height={window.outerHeight - 200}
+            src={
+                "http://localhost:3000/test/ui"
+            }
+        ></iframe>;
+    }
+
+    function getButtonStyle(name) {
+        if (name === page) {
+            return "inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900";
+        }
+
+        return "inline-flex items-center hover:border-b-2 hover:border-grey-500 px-1 pt-1 text-sm font-medium text-gray-900";
+    }
+
     if (!isAuthenticated) {
         return <LoginPage />;
     }
@@ -302,8 +446,8 @@ export default function PatientSidebar() {
     return (
         <>
             <div className='h-screen overflow-clip'>
-                <MobileSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} />
-                <DesktopSidebar />
+                <MobileSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setSelectedPatient={setSelectedPatient} selectedPatient={selectedPatient} />
+                <DesktopSidebar setSelectedPatient={setSelectedPatient} selectedPatient={selectedPatient} />
 
                 <div className="flex flex-col lg:pl-72">
                     <div className="flex sticky top-0 z-40 flex h-16 shrink-0 items-center gap-x-4 border-b border-gray-200 bg-white px-4 shadow-sm sm:gap-x-6 sm:px-6 lg:px-8">
@@ -320,7 +464,8 @@ export default function PatientSidebar() {
                                 {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                                 <a
                                     href="#"
-                                    className="inline-flex items-center border-b-2 border-indigo-500 px-1 pt-1 text-sm font-medium text-gray-900"
+                                    onClick={() => setPage(TREATMENT_HISTORY)}
+                                    className={getButtonStyle(TREATMENT_HISTORY)}
                                 >
                                     Treatment History
                                 </a>
@@ -329,8 +474,8 @@ export default function PatientSidebar() {
                                 {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                                 <a
                                     href="#"
-                                    className="inline-flex items-center hover:border-b-2 hover:border-grey-500 px-1 pt-1 text-sm font-medium text-gray-900"
-                                >
+                                    onClick={() => setPage(CARE_PLAN)}
+                                    className={getButtonStyle(CARE_PLAN)}>
                                     Care plan
                                 </a>
                             </div>
@@ -338,8 +483,8 @@ export default function PatientSidebar() {
                                 {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                                 <a
                                     href="#"
-                                    className="inline-flex items-center hover:border-b-2 hover:border-grey-500 px-1 pt-1 text-sm font-medium text-gray-900"
-                                >
+                                    onClick={() => setPage(RESULTS)}
+                                    className={getButtonStyle(RESULTS)}>
                                     Results
                                 </a>
                             </div>
@@ -347,7 +492,8 @@ export default function PatientSidebar() {
                                 {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                                 <a
                                     href="#"
-                                    className="inline-flex items-center hover:border-b-2 hover:border-grey-500 px-1 pt-1 text-sm font-medium text-gray-900"
+                                    onClick={() => setPage(NOTES)}
+                                    className={getButtonStyle(NOTES)}
                                 >
                                     Notes
                                 </a>
@@ -356,7 +502,8 @@ export default function PatientSidebar() {
                                 {/* Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" */}
                                 <a
                                     href="#"
-                                    className="inline-flex items-center hover:border-b-2 hover:border-grey-500 px-1 pt-1 text-sm font-medium text-gray-900"
+                                    onClick={() => setPage(REQUESTS)}
+                                    className={getButtonStyle(REQUESTS)}
                                 >
                                     Requests
                                 </a>
@@ -428,7 +575,8 @@ export default function PatientSidebar() {
                                     "http://localhost:3000/test/ui"
                                 }
                             ></iframe> */}
-                            <DynamicContentDisplay input={{ name: "Ben", age: 21, occupation: "student", additionalInfo: {text: "another object", numbers: {one: 1, two: 2, three: 3, four: 4, embedding: {text: "this is another embedding"}}} }} />
+                            {/* <DynamicContentDisplay input={{ name: "Ben", age: 21, occupation: "student", additionalInfo: { text: "another object", numbers: { one: 1, two: 2, three: 3, four: 4, embedding: { text: "this is another embedding" } } } }} /> */}
+                            {getPageContent()}
                         </div>
                     </main>
                 </div >

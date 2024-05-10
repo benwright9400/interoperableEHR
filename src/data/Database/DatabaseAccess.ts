@@ -2,17 +2,16 @@ import { model, connect } from 'mongoose';
 import { IPatient, PatientSchema } from './Schemas/UserSchema';
 import * as dotenv from "dotenv";
 import { DocumentSchema } from './Schemas/DocumentSchema';
-dotenv.config({ path: __dirname+'/../../../.env' });
+// dotenv.config({ path: __dirname+'/../../../.env' });
 
 class DatabaseAccess {
 
     constructor() {
-
+        console.log(process.env.MONGO_DB_URI);
+        connect(process.env.MONGO_DB_URI);
     }
 
     async getOrCreatePatient(fullName: String, dateOfBirth: String, address: String, alternativeIdentifiers) {
-        connect(process.env.MONGO_DB_URI);
-
         const Patient = model<IPatient>('Patient', PatientSchema);
 
         //try to find patient with params
@@ -43,24 +42,26 @@ class DatabaseAccess {
 
     }
 
+    async listPatients() {
+        const Patient = model<IPatient>('Patient', PatientSchema);
+
+        return await Patient.find({}).exec();
+    }
+
     //For testing purposes
     async deletePatient(id) {
-        connect(process.env.MONGO_DB_URI);
-
         const Patient = model('Patient', PatientSchema);
 
-        return await Patient.findOneAndDelete(id).exec();
+        return await Patient.findOneAndDelete({patientId: id}).exec();
     }
 
     async getPatientDocuments(id: String) {
-        connect(process.env.MONGO_DB_URI);
         const Document = model('Document', DocumentSchema);
 
         return await Document.find({patientId: id}).exec();
     }
 
     async createPatientDocument(patientId: String, documentDate: String, documentType: String, documentContent) {
-        connect(process.env.MONGO_DB_URI);
         const Document = model('Document', DocumentSchema);
 
         let newDocument = new Document({

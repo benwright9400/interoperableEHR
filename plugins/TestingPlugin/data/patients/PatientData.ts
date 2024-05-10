@@ -10,6 +10,14 @@ class PatientData {
         return formattedResponse;
     }
 
+    async getPatients() {
+        let response = fetch("http://hapi.fhir.org/baseR4/Patient?_count=30&_pretty=true");
+
+        let formattedResponse = (await response).json();
+
+        return formattedResponse;
+    }
+
 }
 
 export default PatientData;

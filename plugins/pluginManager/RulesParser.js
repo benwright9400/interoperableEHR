@@ -17,12 +17,16 @@ class RulesParser {
     getRoute(subject, input) {
         let rules = this.getSubjectRules(subject);
         let applicableRules = [];
+        console.log("rules for this subject: " + rules.length);
         rules.forEach(rule => {
-            let conditions = Object.keys(rule);
+            let conditions = Object.keys(rule.condition);
+            console.log("conditions");
+            console.log(conditions);
             let conditionsApply = true;
             conditions.forEach(key => {
                 if (rule["condition"][key] != input[key]) {
                     conditionsApply = false;
+                    console.log(rule["condition"][key] + " is not equal to " + input[key]);
                 }
             });
             if (conditionsApply) {

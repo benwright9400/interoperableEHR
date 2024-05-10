@@ -6,10 +6,12 @@ require("dotenv").config();
 const {
   default: PluginManager,
 } = require("./plugins/pluginManager/PluginManager");
+const { default: PatientsHandler } = require("./src/logic/PatientsHandler");
+const { default: DocumentsHandler } = require("./src/logic/DocumentsHandler")
 const authCheck = require("./src/user_interface/security/authCheck");
 const { default: RulesParser } = require("./plugins/pluginManager/RulesParser");
 const bodyParser = require("body-parser");
-const port = 3000;
+const port = 3055;
 
 //register relevent plugins
 const pluginManager = new PluginManager(__dirname);
@@ -26,7 +28,7 @@ app.use(function (req, res, next) {
 });
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({extended: false}))
+app.use(bodyParser.urlencoded({ extended: false }))
 
 //setup default route
 app.use(
@@ -43,7 +45,25 @@ app.get("/", (req, res) => {
 app.post("/render/rules", (req, res) => {
   console.log(req.body);
   let route = (new RulesParser()).getRoute(req.body.subject, req.body)
-  res.send({route: route});
+  res.send({ route: route });
+});
+
+app.get("/api/patients", (req, res) => {
+  let patientsHandler = new PatientsHandler();
+
+  patientsHandler.getAllPatients().then((patients) => {
+    res.send(patients);
+  });
+});
+
+app.post("/api/document", (req, res) => {
+  console.log(req.body)
+
+  let documentsHandler = new DocumentsHandler();
+
+  documentsHandler.getPatientDocuments(req.body.id).then((results) => {
+    res.send(results);
+  });
 });
 
 //auth checks are only used in a production environment

@@ -8,22 +8,17 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-class PatientData {
-    constructor() { }
-    getPatient() {
+const DatabaseAccess_1 = __importDefault(require("../data/Database/DatabaseAccess"));
+class PatientsHandler {
+    getAllPatients() {
         return __awaiter(this, void 0, void 0, function* () {
-            let response = fetch("http://hapi.fhir.org/baseR4/Patient/6839219/_history/1?_pretty=true");
-            let formattedResponse = (yield response).json();
-            return formattedResponse;
-        });
-    }
-    getPatients() {
-        return __awaiter(this, void 0, void 0, function* () {
-            let response = fetch("http://hapi.fhir.org/baseR4/Patient?_count=30&_pretty=true");
-            let formattedResponse = (yield response).json();
-            return formattedResponse;
+            let databaseAccess = new DatabaseAccess_1.default();
+            return yield databaseAccess.listPatients();
         });
     }
 }
-exports.default = PatientData;
+exports.default = PatientsHandler;
