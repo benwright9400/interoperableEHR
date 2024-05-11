@@ -1,17 +1,3 @@
-/*
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
-*/
 import { Fragment, useEffect, useState } from 'react'
 import { Dialog, Menu, Transition } from '@headlessui/react'
 import {
@@ -35,24 +21,6 @@ import DynamicContentDisplay from './DynamicContentDisplay'
 import ServerURL from '../util/ServerURL'
 import PageRendering from '../util/PageRendering'
 import DefaultContentLoader from '../util/DefaultContentLoader'
-
-const patients = [
-    {
-        name: 'Ben Wright',
-        address: '2 Bentley Copse',
-        dateOfBirth: '21/05/2003'
-    },
-    {
-        name: 'Charles Gray',
-        address: '12 Cavendish Copse',
-        dateOfBirth: '21/05/1998'
-    },
-    {
-        name: 'Ben Jones',
-        address: '2 Tree Lane',
-        dateOfBirth: '21/05/1983'
-    }
-];
 
 const userNavigation = [
     { name: 'Your profile', href: '#' },
@@ -482,7 +450,7 @@ export default function PatientSidebar() {
 
     return (
         <>
-            <div className='h-screen overflow-clip'>
+            <div className='h-screen overflow-auto'>
                 <MobileSidebar sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen} setSelectedPatient={setSelectedPatient} selectedPatient={selectedPatient} />
                 <DesktopSidebar setSelectedPatient={setSelectedPatient} selectedPatient={selectedPatient} />
 

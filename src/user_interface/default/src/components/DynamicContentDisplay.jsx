@@ -1,3 +1,9 @@
+const excludedFields = [
+    "meta",
+    "text",
+    "identifier"
+]
+
 function DynamicContentDisplay(props) {
 
     let input = props.input;
@@ -6,6 +12,10 @@ function DynamicContentDisplay(props) {
         <dl className="divide-y divide-gray-100">
             {
                 Object.keys(input).map((key) => {
+
+                    if(excludedFields.indexOf(key) != -1) {
+                        return <></>
+                    }
 
                     function getContent(localInput, localKey) {
                         // console.log(typeof localInput[localKey]);
