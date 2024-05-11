@@ -9,11 +9,11 @@ export default function CreateCarePlanPopup(props) {
     if (open != props.open) {
       setOpen(props.open);
     }
-  }, [props]);
+  });
 
   return (
     <Transition.Root show={open} as={Fragment}>
-      <Dialog className="relative z-10" onClose={setOpen}>
+      <Dialog className="relative z-10" onClose={props.setOpen}>
         <Transition.Child
           as={Fragment}
           enter="ease-in-out duration-500"
@@ -49,7 +49,7 @@ export default function CreateCarePlanPopup(props) {
                           <button
                             type="button"
                             className="relative rounded-md bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                            onClick={() => setOpen(false)}
+                            onClick={() => props.setOpen(false)}
                           >
                             <span className="absolute -inset-2.5" />
                             <span className="sr-only">Close panel</span>
