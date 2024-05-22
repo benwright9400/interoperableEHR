@@ -66,6 +66,40 @@ app.post("/api/document", (req, res) => {
   });
 });
 
+app.post("/api/document/update", (req, res) => {
+  console.log(req.body)
+
+  let documentsHandler = new DocumentsHandler();
+
+  documentsHandler.updateDocument(req.body.id, req.body).then((results) => {
+    res.send(results);
+  });
+});
+
+app.post("/api/document/create", (req, res) => {
+  console.log(req.body)
+
+  let documentsHandler = new DocumentsHandler();
+
+  documentsHandler.createDocument(req.body.id, req.body).then((results) => {
+    res.send(results);
+  });
+});
+
+app.get("/api/plugins", (req, res) => {
+  console.log(req.body)
+
+  let list = [];
+
+  let plugins = pluginManager.listPluginList().forEach((val, key, map) => {
+    list.push(key);
+  });
+
+  console.log(list);
+
+  res.send(list);
+});
+
 //auth checks are only used in a production environment
 if (process.env.ENV_TYPE != "TESTING") {
   app.use(authCheck);
