@@ -39,7 +39,6 @@ class DatabaseAccess {
         console.log(saveResult);
         
         return saveResult;
-
     }
 
     async listPatients() {
@@ -61,14 +60,11 @@ class DatabaseAccess {
         return await Document.find({patientId: id}).exec();
     }
 
-    async createPatientDocument(patientId: String, documentDate: String, documentType: String, documentContent) {
+    async createPatientDocument(newValue) {
         const Document = model('Document', DocumentSchema);
 
         let newDocument = new Document({
-            patientId: patientId,
-            documentDate: documentDate,
-            documentType: documentType,
-            documentContent: documentContent
+            ...newValue
         });
 
         let saveResult = await newDocument.save();
@@ -76,7 +72,18 @@ class DatabaseAccess {
         console.log(saveResult);
         
         return saveResult;
+    }
 
+    async updatePatientDocument(documentId: String, newValue) {
+        const Document = model('Document', DocumentSchema);
+
+        let saveResult = await Document.findByIdAndUpdate(documentId, {
+            ...newValue
+        });
+
+        console.log(saveResult);
+        
+        return saveResult;
     }
 
 }

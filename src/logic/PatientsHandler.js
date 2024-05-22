@@ -20,5 +20,11 @@ class PatientsHandler {
             return yield databaseAccess.listPatients();
         });
     }
+    createPatient(patientObject) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let databaseAccess = new DatabaseAccess_1.default();
+            return yield databaseAccess.getOrCreatePatient(patientObject.fullName, patientObject.dateOfBirth, patientObject.address, patientObject.alternativeIdentifiers);
+        });
+    }
 }
 exports.default = PatientsHandler;

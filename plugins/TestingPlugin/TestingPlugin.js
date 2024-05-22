@@ -14,10 +14,16 @@ class TestingPlugin extends AbstractPluginClass_1.default {
             return "This is returned from testMethod";
         }
         if (name === "getPatientInfo") {
-            return (new DataAccess_1.default()).getPatientData().getPatient();
+            return (new DataAccess_1.default()).getPatientData().getPatient(props);
         }
         if (name === "getPatientNameString") {
             return (new PatientFormatter_1.default()).getPatientName();
+        }
+        if (name === "queryPatients") {
+            return (new DataAccess_1.default()).getPatientData().getPatients(props);
+        }
+        if (name === "getHealthData") {
+            return (new DataAccess_1.default()).getPatientData().getPatientHealthData(props);
         }
     }
     applyRoutes(app) {

@@ -62,16 +62,19 @@ class DatabaseAccess {
             return yield Document.find({ patientId: id }).exec();
         });
     }
-    createPatientDocument(patientId, documentDate, documentType, documentContent) {
+    createPatientDocument(newValue) {
         return __awaiter(this, void 0, void 0, function* () {
             const Document = (0, mongoose_1.model)('Document', DocumentSchema_1.DocumentSchema);
-            let newDocument = new Document({
-                patientId: patientId,
-                documentDate: documentDate,
-                documentType: documentType,
-                documentContent: documentContent
-            });
+            let newDocument = new Document(Object.assign({}, newValue));
             let saveResult = yield newDocument.save();
+            console.log(saveResult);
+            return saveResult;
+        });
+    }
+    updatePatientDocument(documentId, newValue) {
+        return __awaiter(this, void 0, void 0, function* () {
+            const Document = (0, mongoose_1.model)('Document', DocumentSchema_1.DocumentSchema);
+            let saveResult = yield Document.findByIdAndUpdate(documentId, Object.assign({}, newValue));
             console.log(saveResult);
             return saveResult;
         });
