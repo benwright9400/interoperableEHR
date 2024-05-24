@@ -7,7 +7,7 @@ import ViewIndividualCarePlan from "../subpages/ViewIndividualCarePlan";
 const SEARCH_PAGE = "SEARCH";
 const VIEW_PAGE = "VIEW";
 
-export default function CarePlan() {
+export default function CarePlan(props) {
   const [page, setPage] = useState(SEARCH_PAGE);
   const [carePlan, setCarePlan] = useState({});
   const [popupOpen, setPopupOpen] = useState(false);
@@ -20,11 +20,11 @@ export default function CarePlan() {
   }
 
   return (
-    <div>
+    <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 pt-10">
       {page === VIEW_PAGE && (popupOpen || !popupOpen)? (
         <div>
-          <CreateCarePlanPopup open={popupOpen} setOpen={setPopupOpen} />
-          <ViewIndividualCarePlan openAddItemPopup={setPopupOpen} />
+          <CreateCarePlanPopup patientId={props.patientId} open={popupOpen} setOpen={setPopupOpen} />
+          <ViewIndividualCarePlan openAddItemPopup={setPopupOpen} patientId={props.patientId} />
         </div>
       ) : (
         <div>
@@ -43,8 +43,8 @@ export default function CarePlan() {
               </button>
             </div>
           </div>
-          <CreateCarePlanPopup open={popupOpen} setOpen={setPopupOpen} />
-          <CarePlanDisplay onSelect={loadCarePlanPage} />
+          <CreateCarePlanPopup patientId={props.patientId} open={popupOpen} setOpen={setPopupOpen} />
+          <CarePlanDisplay onSelect={loadCarePlanPage} patientId={props.patientId} />
         </div>
       )}
     </div>

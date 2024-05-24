@@ -1,76 +1,118 @@
-import { DocumentIcon } from "@heroicons/react/24/outline"
-
-const timeline = [
-    {
-        id: 1,
-        content: 'Care plan for',
-        target: 'Broken Fibula',
-        href: '#',
-        date: '21/05/2024',
-        datetime: '2020-09-20',
-        icon: DocumentIcon,
-        iconBackground: 'bg-blue-400',
-    },
-    {
-        id: 2,
-        content: 'Care plan for',
-        target: 'Fractured Skull',
-        href: '#',
-        date: '21/05/2024',
-        datetime: '2020-09-20',
-        icon: DocumentIcon,
-        iconBackground: 'bg-slate-400',
-    },
-]
+import { DocumentIcon } from "@heroicons/react/24/outline";
+import { useEffect, useState } from "react";
+import ServerURL from "../../util/ServerURL";
+import { ArrowLeftIcon } from "@heroicons/react/20/solid";
+import DynamicContentDisplay from "../DynamicContentDisplay";
 
 function classNames(...classes) {
-    return classes.filter(Boolean).join(' ')
+  return classes.filter(Boolean).join(" ");
 }
 
+const HOME = "HOME";
+const ITEM = "ITEM";
+
 export default function CarePlanDisplay(props) {
+  const [treatments, setTreatment] = useState([]);
 
-    //function to get care plan
+  const [page, setPage] = useState(HOME);
+  const [selectedItem, setSelectedItem] = useState({});
 
-    //delegate object association to other props with popups
+  useEffect(() => {
+    getPatientData();
+  }, []);
 
+  function getPatientData() {
+    fetch(ServerURL.getURL() + "/api/document/", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        id: props.patientId,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        setTreatment(res.filter((item) => item.documentType === "CarePlan"));
+      });
+  }
+
+  if (page === ITEM) {
     return (
-        <div className="flow-root">
-            <ul role="list" className="-mb-8">
-                {timeline.map((event, eventIdx) => (
-                    <li key={event.id}>
-                        <div className="relative pb-8">
-                            {eventIdx !== timeline.length - 1 ? (
-                                <span className="absolute left-4 top-4 -ml-px h-full w-0.5 bg-gray-200" aria-hidden="true" />
-                            ) : null}
-                            <div className="relative flex space-x-3 cursor-pointer group" onClick={() => props.onSelect(event.id)}>
-                                <div>
-                                    <span
-                                        className={classNames(
-                                            event.iconBackground,
-                                            'h-8 w-8 rounded-full flex items-center justify-center ring-8 ring-white group-hover:bg-blue-500'
-                                        )}
-                                    >
-                                        <event.icon className="h-5 w-5 text-white" aria-hidden="true" />
-                                    </span>
-                                </div>
-                                <div className="flex min-w-0 flex-1 justify-between space-x-4 pt-1.5">
-                                    <div>
-                                        <p className="text-sm text-gray-500">
-                                            {event.content}{' '}
-                                            <a href={event.href} className="font-medium text-gray-900">
-                                                {event.target}
-                                            </a>
-                                        </p>
-                                    </div>
-                                    <div className="whitespace-nowrap text-right text-sm text-gray-500">
-                                        <time dateTime={event.datetime}>{event.date}</time>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </li>
-                ))}
-            </ul>
+      <div className="pb-10">
+
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <button
+            type="button"
+            className="inline-flex my-4 items-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={() => setPage(HOME)}
+          >
+            <ArrowLeftIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
+            Button text
+          </button>
+          <DynamicContentDisplay input={selectedItem} />
         </div>
-    )
+      </div>
+    );
+  }
+
+  return (
+    <div className="pb-10">
+
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        {treatments
+          .sort((a, b) => new Date(a.documentDate) > new Date(b.documentDate))
+          .map((item, index) => {
+            if (item.documentType === "Patient") {
+              return <></>;
+            }
+
+            let date = new Date(item.documentDate);
+
+            return (
+              <div
+                className="bg-white hover:bg-slate-100 cursor-pointer group px-4 py-5 sm:px-6 shadow-md rounded-md my-4"
+                onClick={() => {
+                  setSelectedItem(item.documentContent);
+                  setPage(ITEM);
+                }}
+              >
+                <div className="flex space-x-3">
+                  <div className="flex-shrink-0">
+                    <span
+                      className={classNames(
+                        "bg-blue-400",
+                        "h-8 w-8 rounded-full flex items-center justify-center group-hover:bg-blue-500"
+                      )}
+                    >
+                      <DocumentIcon
+                        className="h-5 w-5 text-white"
+                        aria-hidden="true"
+                      />
+                    </span>
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm font-semibold text-gray-900">
+                      {item.documentType}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {date.getDate() +
+                        "/" +
+                        (date.getMonth() + 1) +
+                        "/" +
+                        date.getFullYear()}
+                    </p>
+                  </div>
+                </div>
+                {"resource" in item.documentContent &&
+                "description" in item.documentContent.resource
+                  ? item.documentContent.resource.description
+                  : ""}
+              </div>
+            );
+          })}
+      </div>
+    </div>
+  );
 }
