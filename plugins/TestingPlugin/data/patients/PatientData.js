@@ -30,7 +30,7 @@ class PatientData {
     //Returns a list of all relevent health documents
     getPatientHealthData(localPatientID) {
         return __awaiter(this, void 0, void 0, function* () {
-            console.log(localPatientID);
+            console.log("local id is: " + localPatientID);
             let i = 0;
             try {
                 let data = [];
@@ -92,6 +92,38 @@ class PatientData {
                 console.log(++i);
                 //NutritionOrder
                 response = yield fetch(`https://demo.kodjin.com/fhir/NutritionOrder?patient=${localPatientID}`);
+                data.push(yield response.json());
+                console.log(++i);
+                //Observation
+                response = yield fetch(`https://demo.kodjin.com/fhir/Observation?patient=${localPatientID}`);
+                data.push(yield response.json());
+                console.log(++i);
+                //DiagnosticReport
+                response = yield fetch(`https://demo.kodjin.com/fhir/DiagnosticReport?patient=${localPatientID}`);
+                data.push(yield response.json());
+                console.log(++i);
+                //ServiceRequest
+                response = yield fetch(`https://demo.kodjin.com/fhir/ServiceRequest?patient=${localPatientID}`);
+                data.push(yield response.json());
+                console.log(++i);
+                //ImagingSelection
+                response = yield fetch(`https://demo.kodjin.com/fhir/ImagingSelection?patient=${localPatientID}`);
+                data.push(yield response.json());
+                console.log(++i);
+                //ImagingStudy
+                response = yield fetch(`https://demo.kodjin.com/fhir/ImagingStudy?patient=${localPatientID}`);
+                data.push(yield response.json());
+                console.log(++i);
+                //MolecularSequence
+                response = yield fetch(`https://demo.kodjin.com/fhir/MolecularSequence?patient=${localPatientID}`);
+                data.push(yield response.json());
+                console.log(++i);
+                //Specimen
+                response = yield fetch(`https://demo.kodjin.com/fhir/Specimen?patient=${localPatientID}`);
+                data.push(yield response.json());
+                console.log(++i);
+                //BodyStructure
+                response = yield fetch(`https://demo.kodjin.com/fhir/BodyStructure?patient=${localPatientID}`);
                 data.push(yield response.json());
                 console.log(++i);
                 let items = yield Promise.all(data.map((item) => __awaiter(this, void 0, void 0, function* () {

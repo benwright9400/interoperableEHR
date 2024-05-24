@@ -227,6 +227,15 @@ app.post("/api/patients/external/healthdata", async (req, res) => {
           documentContent: patientsItem,
         });
       }
+
+      if("issued" in patientsItem.resource) {
+        await documentsHandler.createDocument({
+          patientId: createdPatient._id,
+          documentDate: patientsItem.resource.issued,
+          documentType: patientsItem.resource.resourceType,
+          documentContent: patientsItem,
+        });
+      }
     }
   });
 

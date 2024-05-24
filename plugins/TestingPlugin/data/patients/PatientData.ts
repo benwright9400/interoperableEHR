@@ -26,7 +26,7 @@ class PatientData {
 
   //Returns a list of all relevent health documents
   async getPatientHealthData(localPatientID: string) {
-    console.log(localPatientID);
+    console.log("local id is: " + localPatientID);
 
     let i = 0;
 
@@ -165,6 +165,81 @@ class PatientData {
       data.push(await response.json());
 
       console.log(++i);
+
+
+      //Observation
+      response = await fetch(
+        `https://demo.kodjin.com/fhir/Observation?patient=${localPatientID}`
+      );
+
+      data.push(await response.json());
+
+      console.log(++i);
+
+      //DiagnosticReport
+      response = await fetch(
+        `https://demo.kodjin.com/fhir/DiagnosticReport?patient=${localPatientID}`
+      );
+
+      data.push(await response.json());
+
+      console.log(++i);
+
+      //ServiceRequest
+      response = await fetch(
+        `https://demo.kodjin.com/fhir/ServiceRequest?patient=${localPatientID}`
+      );
+
+      data.push(await response.json());
+
+      console.log(++i);
+
+      //ImagingSelection
+      response = await fetch(
+        `https://demo.kodjin.com/fhir/ImagingSelection?patient=${localPatientID}`
+      );
+
+      data.push(await response.json());
+
+      console.log(++i);
+
+      //ImagingStudy
+      response = await fetch(
+        `https://demo.kodjin.com/fhir/ImagingStudy?patient=${localPatientID}`
+      );
+
+      data.push(await response.json());
+
+      console.log(++i);
+
+      //MolecularSequence
+      response = await fetch(
+        `https://demo.kodjin.com/fhir/MolecularSequence?patient=${localPatientID}`
+      );
+
+      data.push(await response.json());
+
+      console.log(++i);
+
+      //Specimen
+      response = await fetch(
+        `https://demo.kodjin.com/fhir/Specimen?patient=${localPatientID}`
+      );
+
+      data.push(await response.json());
+
+      console.log(++i);
+
+      //BodyStructure
+      response = await fetch(
+        `https://demo.kodjin.com/fhir/BodyStructure?patient=${localPatientID}`
+      );
+
+      data.push(await response.json());
+
+      console.log(++i);
+
+
 
       let items = await Promise.all(
         data.map(async (item) => {
