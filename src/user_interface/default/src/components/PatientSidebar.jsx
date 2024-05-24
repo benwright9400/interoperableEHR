@@ -527,7 +527,7 @@ export default function PatientSidebar() {
     //page refers to extension point
 
     if (pageUrl === "DEFAULT") {
-      return DefaultContentLoader.getPage(page);
+      return DefaultContentLoader.getPage(page, selectedPatient._id);
     }
 
     return (

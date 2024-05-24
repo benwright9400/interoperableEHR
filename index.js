@@ -156,7 +156,7 @@ app.post("/api/patients/external/healthdata", async (req, res) => {
     patientAddress =
       patientInfo.address[0].line[0] + ", " + patientInfo.address[0].country;
   } else if ("city" in patientInfo.address[0]) {
-    patientAddress = patientInfo[0].city;
+    patientAddress = patientInfo.address[0].city;
   }
 
   let newPatientInput = {
@@ -177,7 +177,7 @@ app.post("/api/patients/external/healthdata", async (req, res) => {
   console.log(createdPatient);
 
   await documentsHandler.createDocument({
-    patientId: patientQueryInfo.id,
+    patientId: createdPatient._id,
     documentDate: new Date().toISOString(),
     documentType: "Patient",
     documentContent: patientInfo,
@@ -188,7 +188,10 @@ app.post("/api/patients/external/healthdata", async (req, res) => {
   let patientsList = await pluginManager
     .loadPlugin(req.body.plugin)
     .executeMethod("getHealthData", patientQueryInfo.id);
+
+    console.log("result from healthdata query");
   console.log(patientsList);
+  console.log(patientsList.length);
 
   //convert data to documents
   patientsList.forEach(async (patientsItem) => {
@@ -200,17 +203,26 @@ app.post("/api/patients/external/healthdata", async (req, res) => {
     } else {
       if ("date" in patientsItem.resource) {
         await documentsHandler.createDocument({
-          patientId: patientQueryInfo.id,
+          patientId: createdPatient._id,
           documentDate: patientsItem.resource.date,
           documentType: patientsItem.resource.resourceType,
           documentContent: patientsItem,
         });
       }
 
-      if ("created" in patientsItem.resource) {
+      if("created" in patientsItem.resource) {
         await documentsHandler.createDocument({
-          patientId: patientQueryInfo.id,
+          patientId: createdPatient._id,
           documentDate: patientsItem.resource.created,
+          documentType: patientsItem.resource.resourceType,
+          documentContent: patientsItem,
+        });
+      }
+
+      if("recordedDate" in patientsItem.resource) {
+        await documentsHandler.createDocument({
+          patientId: createdPatient._id,
+          documentDate: patientsItem.resource.recordedDate,
           documentType: patientsItem.resource.resourceType,
           documentContent: patientsItem,
         });

@@ -4,18 +4,18 @@ import TreatmentHistory from "../components/default_pages/TreatmentHistory";
 
 class DefaultContentLoader {
 
-    static getPage(name) {
+    static getPage(name, patientId) {
 
         if (name === "TREATMENT_HISTORY") {
-            return <TreatmentHistory />;
+            return <TreatmentHistory patientId={patientId} />;
         }
 
         if (name === "CARE_PLAN") {
-            return <CarePlan />;
+            return <CarePlan patientId={patientId} />;
         }
 
         if(name === "IMPORTS") {
-            return <ImportsPage />;
+            return <ImportsPage patientId={patientId} />;
         }
 
         return <h1>Please select a page</h1>;
