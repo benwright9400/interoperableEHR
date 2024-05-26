@@ -1,4 +1,4 @@
-const excludedFields = ["meta", "text", "identifier", "url"];
+const excludedFields = ["meta", "text", "identifier", "url", "resourceType", "id", "extension", "active"];
 
 const hiddenKeys = ["0", "valueString"]; //hides keys but displays content
 

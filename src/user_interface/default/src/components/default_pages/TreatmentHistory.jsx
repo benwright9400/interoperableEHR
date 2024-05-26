@@ -3,18 +3,17 @@ import ServerURL from "../../util/ServerURL";
 import DynamicContentDisplay from "../DynamicContentDisplay";
 import { DocumentIcon } from "@heroicons/react/24/outline";
 import { ArrowLeftIcon, CheckCircleIcon } from "@heroicons/react/20/solid";
+import AddTreatment from "../subpages/AddTreatment";
+import Pages from "../util/Pages";
 
 function classNames(...classes) {
   return classes.filter(Boolean).join(" ");
 }
 
-const HOME = "HOME";
-const ITEM = "ITEM";
-
 function TreatmentHistory(props) {
   const [treatments, setTreatment] = useState([]);
 
-  const [page, setPage] = useState(HOME);
+  const [page, setPage] = useState(Pages.HOME);
   const [selectedItem, setSelectedItem] = useState({});
 
   useEffect(() => {
@@ -38,27 +37,34 @@ function TreatmentHistory(props) {
       });
   }
 
-  if (page === ITEM) {
+  if (page === Pages.ADD_PAGE) {
     return (
-      <div className="py-10">
+      <AddTreatment setPage={setPage}/>
+    );
+  }
+
+  if (page === Pages.ITEM) {
+    return (
+      <div className="py-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Header */}
-        <header>
-          <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
+        <header className="flex flew-row">
+          <div className="min-w-0 flex-1">
+            <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
               Treatment History
-            </h1>
+            </h2>
+          </div>
+          <div className="flex">
+            <button
+              type="button"
+              className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+              onClick={() => setPage(Pages.HOME)}
+            >
+              Back
+            </button>
           </div>
         </header>
 
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <button
-            type="button"
-            className="inline-flex my-4 items-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-1.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-            onClick={() => setPage(HOME)}
-          >
-            <ArrowLeftIcon className="-ml-0.5 h-5 w-5" aria-hidden="true" />
-            Button text
-          </button>
+        <div className="px-4 py-8 max-w-7xl! sm:px-6 lg:px-8">
           <DynamicContentDisplay input={selectedItem} />
         </div>
       </div>
@@ -66,13 +72,22 @@ function TreatmentHistory(props) {
   }
 
   return (
-    <div className="py-10">
+    <div className="py-10 mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
       {/* Header */}
-      <header>
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
+      <header className="flex flew-row">
+        <div className="min-w-0 flex-1">
+          <h2 className="text-2xl font-bold leading-7 text-gray-900 sm:truncate sm:text-3xl sm:tracking-tight">
             Treatment History
-          </h1>
+          </h2>
+        </div>
+        <div className="flex">
+          <button
+            type="button"
+            className="inline-flex items-center rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-700 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+            onClick={() => setPage(Pages.ADD_PAGE)}
+          >
+            Add treatment
+          </button>
         </div>
       </header>
 
@@ -90,8 +105,8 @@ function TreatmentHistory(props) {
               <div
                 className="bg-white hover:bg-slate-100 cursor-pointer group px-4 py-5 sm:px-6 shadow-md rounded-md my-4"
                 onClick={() => {
-                  setSelectedItem(item.documentContent);
-                  setPage(ITEM);
+                  setSelectedItem(item.documentContent.resource);
+                  setPage(Pages.ITEM);
                 }}
               >
                 <div className="flex space-x-3">

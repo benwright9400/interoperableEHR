@@ -26,7 +26,7 @@ const options = {
 		next: () => <span className="text-sm">{">"}</span>,
 	},
 	datepickerClassNames: "light",
-	defaultDate: new Date("2022-01-01"),
+	defaultDate: new Date(),
 	language: "en",
 	disabledDates: [],
 	weekDays: ["Mo", "Tu", "We", "Th", "Fr", "Sa", "Su"],
@@ -40,7 +40,7 @@ const options = {
 	}
 }
 
-function TailwindDatePicker() {
+function TailwindDatePicker(props) {
 	const [show, setShow] = useState(false)
 
 	function handleChange(selectedDate) {
@@ -53,7 +53,7 @@ function TailwindDatePicker() {
 
 	return (
 		<div className="">
-			<Datepicker options={options} onChange={handleChange} show={show} setShow={handleClose} />
+			<Datepicker options={options} onChange={props.onChange} show={show} setShow={handleClose} />
 		</div>
 	)
 }

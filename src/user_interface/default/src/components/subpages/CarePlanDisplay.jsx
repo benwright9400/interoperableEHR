@@ -74,7 +74,7 @@ export default function CarePlanDisplay(props) {
               <div
                 className="bg-white hover:bg-slate-100 cursor-pointer group px-4 py-5 sm:px-6 shadow-md rounded-md my-4"
                 onClick={() => {
-                  setSelectedItem(item.documentContent);
+                  setSelectedItem(item.documentContent.resource);
                   setPage(ITEM);
                 }}
               >
