@@ -11,12 +11,21 @@ class TestingPlugin extends AbstractPlugin {
     }
 
     if (name === "getPatientInfo") {
-      return (new DataAccess()).getPatientData().getPatient();
+      return (new DataAccess()).getPatientData().getPatient(props);
     }
 
     if(name === "getPatientNameString") {
       return (new PatientFormatter()).getPatientName();
     }
+
+    if(name === "queryPatients") {
+      return (new DataAccess()).getPatientData().getPatients(props);
+    }
+
+    if(name === "getHealthData") {
+      return (new DataAccess()).getPatientData().getPatientHealthData(props);
+    }
+
   }
 
   applyRoutes(app: any) {

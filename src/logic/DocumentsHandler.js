@@ -20,5 +20,17 @@ class DocumentsHandler {
             return yield databaseAccess.getPatientDocuments(id);
         });
     }
+    updateDocument(id, newValue) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let databaseAccess = new DatabaseAccess_1.default();
+            return yield databaseAccess.updatePatientDocument(id, newValue);
+        });
+    }
+    createDocument(newValue) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let databaseAccess = new DatabaseAccess_1.default();
+            return yield databaseAccess.createPatientDocument(newValue);
+        });
+    }
 }
 exports.default = DocumentsHandler;
