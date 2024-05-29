@@ -270,7 +270,6 @@ export default function CarePlan() {
             </div>
             <Popup />
             <CarePlanDisplay onSelect={loadCarePlanPage} />
-
         </div>
     )
 }
