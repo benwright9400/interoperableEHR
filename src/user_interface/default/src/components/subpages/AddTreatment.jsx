@@ -63,6 +63,8 @@ function SubPage(props) {
       <TreatmentForm
         treatmentType={selectedPerson.code}
         back={() => setSubPage(Pages.TREATMENT_SELECTION)}
+        finish={() => setSubPage(Pages.TREATMENT_COMPLETE_PAGE)}
+        patientId={props.patientId}
       />
     );
   }
@@ -188,7 +190,7 @@ export default function AddTreatment(props) {
 
       {/* Page content */}
       <div className="">
-        <SubPage />
+        <SubPage patientId={props.patientId} />
       </div>
     </div>
   );

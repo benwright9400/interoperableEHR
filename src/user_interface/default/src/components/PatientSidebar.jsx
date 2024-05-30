@@ -24,6 +24,7 @@ import DynamicContentDisplay from "./DynamicContentDisplay";
 import ServerURL from "../util/ServerURL";
 import PageRendering from "../util/PageRendering";
 import DefaultContentLoader from "../util/DefaultContentLoader";
+import Page from "../util/Page";
 
 const userNavigation = [
   { name: "Your profile", href: "#" },
@@ -491,8 +492,6 @@ export default function PatientSidebar() {
   const [page, setPage] = useState(TREATMENT_HISTORY);
   const [defaultContent, setDefaultContent] = useState(true);
 
-  const [pageUrl, setPageUrl] = useState("DEFAULT");
-
   const [selectedPatient, setSelectedPatient] = useState({
     name: "Ben Wright",
     address: "2 Bentley Copse",
@@ -509,34 +508,18 @@ export default function PatientSidebar() {
         setAppToken(tokenVal);
         setToken(tokenVal);
       });
-
-      PageRendering.shouldRenderDefault("sidebar", {
-        source: "Example HL7 Integration",
-        type: "patientInfo",
-      }).then((res) => {
-        if (res.route === "DEFAULT") {
-          setPageUrl(res.route);
-        } else {
-          setPageUrl("http://127.0.0.1:3055" + res.route);
-        }
-      });
     }
   });
 
   function getPageContent() {
     //page refers to extension point
 
-    if (pageUrl === "DEFAULT") {
-      return DefaultContentLoader.getPage(page, selectedPatient._id);
-    }
-
     return (
-      <iframe
-        id="body-iframe"
-        className="w-full"
-        height={window.outerHeight - 200}
-        src={pageUrl}
-      ></iframe>
+      <Page
+        children={DefaultContentLoader.getPage(page, selectedPatient._id)}
+        subject={page}
+        content={{}}
+      />
     );
   }
 
