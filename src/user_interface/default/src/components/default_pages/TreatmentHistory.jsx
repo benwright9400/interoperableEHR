@@ -38,9 +38,7 @@ function TreatmentHistory(props) {
   }
 
   if (page === Pages.ADD_PAGE) {
-    return (
-      <AddTreatment setPage={setPage}/>
-    );
+    return <AddTreatment patientId={props.patientId} setPage={setPage} />;
   }
 
   if (page === Pages.ITEM) {
@@ -105,7 +103,12 @@ function TreatmentHistory(props) {
               <div
                 className="bg-white hover:bg-slate-100 cursor-pointer group px-4 py-5 sm:px-6 shadow-md rounded-md my-4"
                 onClick={() => {
-                  setSelectedItem(item.documentContent.resource);
+                  if ("resource" in item.documentContent) {
+                    setSelectedItem(item.documentContent.resource);
+                  } else {
+                    setSelectedItem(item.documentContent);
+                  }
+
                   setPage(Pages.ITEM);
                 }}
               >

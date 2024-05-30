@@ -92,7 +92,7 @@ app.post("/api/document/create", (req, res) => {
 
   let documentsHandler = new DocumentsHandler();
 
-  documentsHandler.createDocument(req.body.id, req.body).then((results) => {
+  documentsHandler.createDocument(req.body).then((results) => {
     res.send(results);
   });
 });

@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import ResourceTypes from "../util/ResourceTypes";
 import TailwindDatePicker from "../DatePicker";
+import ServerURL from "../../util/ServerURL";
 
 function FormLayout(props) {
   if (props.treatmentType === ResourceTypes.CONDITION) {
@@ -1095,7 +1096,7 @@ function FormLayout(props) {
           <p className="mt-1 text-sm leading-6 text-gray-600">
             Add a new observation to this patient's record
           </p>
-          
+
           <div className="mt-10 grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
             <div className="col-span-full">
               <label
@@ -1328,7 +1329,10 @@ function FormLayout(props) {
                   className="block w-full px-2 rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                   defaultValue={""}
                   onChange={(e) =>
-                    props.onChange({ ...props.formData, method: e.target.value })
+                    props.onChange({
+                      ...props.formData,
+                      method: e.target.value,
+                    })
                   }
                 />
               </div>
@@ -1397,6 +1401,29 @@ export default function TreatmentForm(props) {
       creationDate: new Date().toISOString(),
       treatment_type: props.treatmentType,
     };
+
+    fetch(ServerURL.getURL() + "/api/document/create", {
+      headers: {
+        "Content-Type": "application/json",
+      },
+      method: "POST",
+      body: JSON.stringify({
+        id: props.patientId,
+        patientId: props.patientId,
+        documentDate: formattedData.creationDate,
+        documentType: props.treatmentType,
+        documentContent: formattedData,
+      }),
+    })
+      .then((res) => res.json())
+      .then((res) => {
+        console.log(res);
+        // props.
+        props.finish();
+      })
+      .catch((error) => {
+        console.log(error);
+      });
 
     //send to backend
   }

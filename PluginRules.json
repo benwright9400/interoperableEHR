@@ -5,7 +5,7 @@
             "condition": {
                 "source": "St Clements"
             },
-            "route": "/pluginA/ui"
+            "route": "/test/ui"
         },
         {
             "subject": "test-subject",
@@ -28,6 +28,12 @@
                 "type": "patientInfo"
             },
             "route": "DEFAULT"
+        },
+        {
+            "subject": "CARE_PLAN",
+            "condition": {
+            },
+            "route": "/test/ui"
         }
     ]
 }
