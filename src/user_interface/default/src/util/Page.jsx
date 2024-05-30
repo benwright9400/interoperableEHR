@@ -19,7 +19,7 @@ const Page = (props) => {
     return <div>Loading</div>;
   }
 
-  if (url != "DEFAULT") {
+  if (url != "DEFAULT" && url != "ERROR_MULTIPLE_RULES_APPLY") {
     return (
       <iframe
         id="body-iframe"
