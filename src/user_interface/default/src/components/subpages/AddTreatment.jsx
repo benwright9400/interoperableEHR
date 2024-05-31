@@ -26,27 +26,27 @@ function SubPage(props) {
   const people = [
     {
       name: "Observation",
-      username: "@lesliealexander",
+      username: "Clinical",
       code: ResourceTypes.OBSERVATION,
     },
     {
       name: "CarePlan",
-      username: "@lesliealexander",
+      username: "Clinical",
       code: ResourceTypes.CARE_PLAN,
     },
     {
       name: "Condition",
-      username: "@lesliealexander",
+      username: "Clinical",
       code: ResourceTypes.CONDITION,
     },
     {
       name: "Medication",
-      username: "@lesliealexander",
+      username: "Medication",
       code: ResourceTypes.MEDICATION,
     },
     {
       name: "Clinical Impression",
-      username: "@lesliealexander",
+      username: "Clinical",
       code: ResourceTypes.CLINICAL_IMPRESSION,
     },
   ];
