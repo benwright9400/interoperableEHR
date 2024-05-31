@@ -168,9 +168,11 @@ function ImportsPage() {
                       Address:
                     </dt>
                     <dd className="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0 ml-2">
-                      <DynamicContentDisplay
-                        input={result.resource.address[0]}
-                      />
+                      {"address" in result.resource ? (
+                        <DynamicContentDisplay
+                          input={result.resource.address}
+                        />
+                      ) : null}
                     </dd>
                   </div>
                 </dl>

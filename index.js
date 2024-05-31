@@ -185,6 +185,9 @@ app.post("/api/patients/external/healthdata", async (req, res) => {
 
   console.log(patientInfo);
 
+
+  
+  //get and store documents for health data
   let patientsList = await pluginManager
     .loadPlugin(req.body.plugin)
     .executeMethod("getHealthData", patientQueryInfo.id);
@@ -193,7 +196,7 @@ app.post("/api/patients/external/healthdata", async (req, res) => {
   console.log(patientsList);
   console.log(patientsList.length);
 
-  //convert data to documents
+  //convert data to document schema and store in database
   patientsList.forEach(async (patientsItem) => {
     console.log(patientsItem);
 
